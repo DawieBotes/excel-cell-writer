@@ -54,26 +54,26 @@ class Program
         }
 
       // 🔁 Force recalculation on load (modern workaround)
-var existingCalc = spreadsheet.WorkbookPart.Workbook
-    .Descendants<OpenXmlElement>()
-    .FirstOrDefault(e => e.LocalName == "workbookCalcPr");
+        var existingCalc = spreadsheet.WorkbookPart.Workbook
+        .Descendants<OpenXmlElement>()
+        .FirstOrDefault(e => e.LocalName == "workbookCalcPr");
 
-        if (existingCalc != null)
-        {
-            existingCalc.Remove();
+            if (existingCalc != null)
+            {
+                existingCalc.Remove();
+            }
+
+            var fullCalcElement = new OpenXmlUnknownElement("workbookCalcPr");
+            fullCalcElement.SetAttribute(new OpenXmlAttribute("fullCalcOnLoad", null, "1"));
+            spreadsheet.WorkbookPart.Workbook.Append(fullCalcElement);
+            spreadsheet.WorkbookPart.Workbook.Save();
+
+
+            WriteToSheet(spreadsheet, sheetName, cellDataList);
+            ClearCachedFormulaValues(spreadsheet, sheetName);
+            spreadsheet.WorkbookPart.Workbook.Save();
+            Console.WriteLine("Done writing to Excel.");
         }
-
-        var fullCalcElement = new OpenXmlUnknownElement("workbookCalcPr");
-        fullCalcElement.SetAttribute(new OpenXmlAttribute("fullCalcOnLoad", null, "1"));
-        spreadsheet.WorkbookPart.Workbook.Append(fullCalcElement);
-        spreadsheet.WorkbookPart.Workbook.Save();
-
-
-        WriteToSheet(spreadsheet, sheetName, cellDataList);
-        ClearCachedFormulaValues(spreadsheet, sheetName);
-        spreadsheet.WorkbookPart.Workbook.Save();
-        Console.WriteLine("Done writing to Excel.");
-    }
 
     static void ClearCachedFormulaValues(SpreadsheetDocument doc, string sheetName)
     {
