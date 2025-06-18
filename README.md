@@ -22,7 +22,17 @@ Supports automatic recalculation of formulas on file open, and respects existing
 - .NET 6 or newer  
 - OpenXML SDK  
 
-Install with:
+## To use:
+
+Download the release folder.
+
+Run the EXE:
+
+```
+excel-cell-writer.exe -- <jsonFilePath> <excelFilePath> <sheetName>
+```
+
+Or Install with:
 
 ```
 dotnet add package DocumentFormat.OpenXml
